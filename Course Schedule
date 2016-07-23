@@ -1,0 +1,88 @@
+There are a total of n courses you have to take, labeled from 0 to n - 1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+For example:
+
+2, [[1,0]]
+There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible.
+
+2, [[1,0],[0,1]]
+There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+
+Note:
+The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+
+click to show more hints.
+
+Hints:
+This problem is equivalent to finding if a cycle exists in a directed graph. If a cycle exists, no topological ordering exists and therefore it will be impossible to take all courses.
+Topological Sort via DFS - A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.
+Topological sort could also be done via BFS.
+
+"// DFS
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites)
+{
+        vector<vector<int> > edges(numCourses);
+        for(int i=0; i<prerequisites.size(); i++)
+        {
+                edges[prerequisites[i][1]].push_back(prerequisites[i][0]); // add edge 0->1
+        }
+        
+        unordered_set<int> visited;
+        vector<bool> checked(numCourses, false);
+        for(int i=0; i<edges.size(); i++)
+        {
+                if(checked[i]==false && !DFS(edges, i, visited, checked)) return false;
+        }
+        return true;
+}
+
+bool DFS(vector<vector<int> > &edges, int node, unordered_set<int> &visited, vector<bool> &checked)
+{
+        visited.insert(node);
+        for(int i=0; i<edges[node].size(); i++)
+        {
+                if(visited.find(edges[node][i])!=visited.end() || !DFS(edges, edges[node][i], visited, checked)) return false;
+        }
+        visited.erase(node);
+        checked[node]=true;
+        return true;
+}"
+
+"// BFS
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites)
+{
+        vector<vector<int> > edges(numCourses);
+        for(int i=0; i<prerequisites.size(); i++)
+        {
+                edges[prerequisites[i][1]].push_back(prerequisites[i][0]); // add edge 0->1
+        }
+        vector<int> inDegree(numCourses);
+        for(int i=0; i<edges.size(); i++)
+        {
+            for(int j=0; j<edges[i].size(); j++)  inDegree[edges[i][j]]++;
+        }
+        unordered_set<int> set;
+    for(int i=0; i<numCourses; i++) set.insert(i);
+    queue<int> q;
+    for(int i=0; i<inDegree.size(); i++)
+    {
+        if(inDegree[i]==0) q.push(i);
+    }
+    
+    while(!q.empty())
+    {
+        int cur = q.front(); q.pop();
+        set.erase(cur);
+        for(int i=0; i<edges[cur].size(); i++)
+        {
+            inDegree[edges[cur][i]]--;
+            if(inDegree[edges[cur][i]]==0) q.push(edges[cur][i]);
+        }
+        inDegree[cur]--;
+    }
+    return set.empty();
+}"
