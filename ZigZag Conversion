@@ -26,3 +26,47 @@ public class Solution {
         return res.toString();
     }
 }
+
+
+数学题。巨无聊的一道题，真正面试过程中，不大可能出这种问题。
+n=4
+P              I              N
+A         L  S         I   G
+Y   A       H    R
+P              I
+
+N=5
+P               H
+A          S  I
+Y      I       R
+P   L          I      G
+A              N
+
+所以，对于每一层主元素(红色元素)的坐标 (i,j)= (j+1 )*n +i
+对于每两个主元素之间的插入元素（绿色元素），(j+1)*n -i
+
+[Code]
+1:    string convert(string s, int nRows) {  
+2:      // Start typing your C/C++ solution below  
+3:      // DO NOT write int main() function    
+4:      if(nRows <= 1) return s;  
+5:      string result;  
+6:      if(s.size() ==0) return result;  
+7:      for(int i =0; i< nRows; i++)  
+8:      {  
+9:        for(int j =0, index =i; index < s.size();   
+10:            j++, index = (2*nRows-2)*j +i)  
+11:        {  
+12:          result.append(1, s[index]);  //red element
+13:          if(i ==0 || i == nRows-1)   //green element
+14:          {            
+15:            continue;  
+16:          }  
+17:          if(index+(nRows- i-1)*2 < s.size())  
+18:          {  
+19:            result.append(1, s[index+(nRows- i-1)*2]);  
+20:          }  
+21:        }  
+22:      }  
+23:      return result;  
+24:    }  
