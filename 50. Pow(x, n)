@@ -1,0 +1,96 @@
+Implement pow(x, n).
+
+ 
+This is using some rules for exponential. For even number of power, for example, 2^4, we can do 2^2 * 2^2.
+For odd number of power, for example, 2^5, we can do 2*2^2*2^2. This is equivalent to 
+6:       if (n % 2 == 0)  
+7:         return v * v;  
+8:       else  
+9:         return v * v * x;  
+Hope this help.﻿
+
+二分法，注意n<0的情况。
+
+ double power(double x, int n)  
+2:    {  
+3:       if (n == 0)  
+4:         return 1;  
+5:       double v = power(x, n / 2);  
+6:       if (n % 2 == 0)  
+7:         return v * v;  
+8:       else  
+9:         return v * v * x;  
+10:     }  
+11:     double pow(double x, int n) {  
+12:       // Start typing your C/C++ solution below  
+13:       // DO NOT write int main() function  
+14:       if (n < 0)  
+15:         return 1.0 / power(x, -n);  
+16:       else  
+17:         return power(x, n);      
+18:     }  
+
+Note:
+if(Integer.MIN_VALUE == n) {
+return myPow(x, Integer.MAX_VALUE) * x;
+}﻿
+
+public class Solution {
+    public double pow(double x, int n) {
+        if (n == 0) {
+            return 1;
+        }
+
+        if (n == 1) {
+            return x;
+        }
+
+        boolean isNegative = false;
+        if (n < 0) {
+            isNegative = true;
+            n *= -1;
+        }
+
+        int k = n / 2;
+        int l = n - k * 2;
+        double t1 = pow(x, k);
+        double t2 = pow(x, l);
+        if (isNegative) {
+            return 1/(t1*t1*t2);
+        } else {
+            return t1*t1*t2;
+        }
+    }
+}
+
+"double pow(double x, int n)
+{
+    if(n==0) return 1;
+    if(n==1) return x;
+    if(n==INT_MIN) return 1/pow(x, INT_MAX)/x;
+    if(n<0) return 1/pow(x, -n);
+    double p = pow(x, n/2);
+    if(n%2==0) return p*p;
+    else return p*p*x;
+}"
+
+"// corner cases:
+1. n is 0
+2. n is negative
+3. n is max negative INT_MIN
+
+double pow(double x, int n) {
+    double res=1;
+     if(n<0){
+        x=1/x;
+        n=-n;
+    }
+    while(n>0){
+        if(n&1==1){
+            res=res*x;
+        }
+        x*=x;
+        n=n>>1;
+    }
+    return res;
+}"
